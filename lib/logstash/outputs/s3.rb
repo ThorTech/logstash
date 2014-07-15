@@ -152,7 +152,10 @@ class LogStash::Outputs::S3 < LogStash::Outputs::Base
 
  # Temp directory for files top be copied to S3
  config :temp_directory, :validate => :string, :default => "/opt/logstash/S3_temp/"
-  
+
+ # Make delete of tmp file configurable
+ config :delete_tmp, :validate => :boolean, :default => false
+
  # Method to set up the aws configuration and establish connection
  def aws_s3_config
 
@@ -233,7 +236,9 @@ class LogStash::Outputs::S3 < LogStash::Outputs::Base
        end
      end
 
-     File.delete (file)
+     if (@delete_tmp)
+       File.delete (file)
+     end
 
    end
  end
